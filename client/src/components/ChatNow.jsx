@@ -115,7 +115,7 @@ const SendButton = styled.button`
 `;
 
 function ChatNow() {
-  const [username, setUsername] = useState(localStorage.getItem('loggedInUser') || 'Anonymous');
+  const username=(localStorage.getItem('loggedInUser') || 'Anonymous');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const messageEndRef = useRef(null); // To scroll to the last message
