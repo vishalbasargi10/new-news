@@ -69,7 +69,6 @@ const NewsHeading = styled.h2`
 
 const News = (props) => {
   const { saved } = props;
-
   const username = localStorage.getItem('loggedInUser');
   const { category } = props;
   const [articles, setArticles] = useState([]);
@@ -80,18 +79,28 @@ const News = (props) => {
     const url = `https://newsapi.org/v2/everything?q=${category}&apiKey=46355f02d04e4f778822e4e7829d1b66`;
     
     try {
-      let data = await fetch(url);
-      
+      console.log("Fetching from URL:", url); // Log the URL
+
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        }
+      });
+
       // Check if response is ok
-      if (!data.ok) {
-        console.error("HTTP error:", data.status, data.statusText);
+      if (!response.ok) {
+        console.error("HTTP error:", response.status, response.statusText);
+        const errorBody = await response.text();
+        console.error("Error body:", errorBody); // Log the error body
         setLoading(false);
         return;
       }
 
-      let parsedData = await data.json();
+      const parsedData = await response.json();
       console.log("Fetched articles:", parsedData.articles);
-      
+
       if (parsedData.articles) {
         setArticles(parsedData.articles);
       } else {
