@@ -28,7 +28,7 @@ function Signup() {
       return handleError('Enter All Credentials');
     }
     try {
-      const url = 'http://localhost:8080/auth/signup';
+      const url = 'https://new-news-augo.onrender.com/auth/signup';
       const response = await fetch(url, {
         method: 'POST',
         headers: {

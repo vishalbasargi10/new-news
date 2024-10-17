@@ -118,7 +118,7 @@ export default function NewsItem({
   const saveNews = async () => {
     try {
       // Send a POST request to the backend API to save the news item
-      const response = await axios.post('http://localhost:8080/save-news', { 
+      const response = await axios.post('https://new-news-augo.onrender.com/save-news', { 
         title,
         description,
         imageUrl,

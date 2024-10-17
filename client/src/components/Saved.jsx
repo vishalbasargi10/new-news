@@ -29,7 +29,7 @@ export default function NewsFromDB() {
   useEffect(() => {
     const fetchNewsFromDB = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/get-news');
+        const response = await axios.get('https://new-news-augo.onrender.com/get-news');
         setNewsData(response.data); // Assuming the data is an array of news articles
         setLoading(false);
       } catch (error) {

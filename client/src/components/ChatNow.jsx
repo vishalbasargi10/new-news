@@ -120,7 +120,7 @@ function ChatNow() {
   const [messages, setMessages] = useState([]);
   const messageEndRef = useRef(null); // To scroll to the last message
 
-  const { sendMessage, lastMessage } = useWebSocket('ws://localhost:8080', {
+  const { sendMessage, lastMessage } = useWebSocket('ws://new-news-augo.onrender.com', {
     onOpen: () => console.log('Connected to WebSocket'),
     shouldReconnect: () => true,
   });
