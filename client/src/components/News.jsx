@@ -69,6 +69,7 @@ const NewsHeading = styled.h2`
 
 const News = (props) => {
   const { saved } = props;
+
   const username = localStorage.getItem('loggedInUser');
   const { category } = props;
   const [articles, setArticles] = useState([]);
@@ -77,28 +78,17 @@ const News = (props) => {
   const updateNews = useCallback(async () => {
     setLoading(true);
     const url = `https://newsapi.org/v2/everything?q=${category}&apiKey=46355f02d04e4f778822e4e7829d1b66`;
-    
-    try {
-      console.log("Fetching from URL:", url); // Log the URL
 
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        }
-      });
+    try {
+      let response = await fetch(url);
 
       // Check if response is ok
       if (!response.ok) {
         console.error("HTTP error:", response.status, response.statusText);
-        const errorBody = await response.text();
-        console.error("Error body:", errorBody); // Log the error body
-        setLoading(false);
         return;
       }
 
-      const parsedData = await response.json();
+      let parsedData = await response.json();
       console.log("Fetched articles:", parsedData.articles);
 
       if (parsedData.articles) {
@@ -118,72 +108,79 @@ const News = (props) => {
     updateNews();
   }, [category, updateNews]);
 
-  const gizmodoArticles = articles?.filter(
+  const gizmodoArticles = articles.filter(
     (article) => article.source.name === "Gizmodo.com"
-  ) || [];
-  const vergeArticles = articles?.filter(
+  );
+  const vergeArticles = articles.filter(
     (article) => article.source.name === "The Verge"
-  ) || [];
-  const BBCArticles = articles?.filter(
+  );
+  const BBCArticles = articles.filter(
     (article) => article.source.name === "BBC News"
-  ) || [];
+  );
 
   return (
     <>
       {loading && <Spinner />}
+      {articles.length === 0 && !loading && <div>No articles found.</div>}
 
       <NewsBlockContainer>
-        <NewsItemWrapper>
-          <NewsHeading>Gizmodo</NewsHeading>
-          {gizmodoArticles.map((element) => (
-            <NewsItem
-              key={element.url}
-              title={element.title ? element.title.slice(0, 45) : ""}
-              description={element.description}
-              imageUrl={element.urlToImage}
-              newsUrl={element.url}
-              author={element.author}
-              date={element.publishedAt}
-              source={element.source.name}
-              username={username}
-              saved={saved}
-            />
-          ))}
-        </NewsItemWrapper>
-        <NewsItemWrapper>
-          <NewsHeading>The Verge</NewsHeading>
-          {vergeArticles.map((element) => (
-            <NewsItem
-              key={element.url}
-              title={element.title ? element.title.slice(0, 45) : ""}
-              description={element.description}
-              imageUrl={element.urlToImage}
-              newsUrl={element.url}
-              author={element.author}
-              date={element.publishedAt}
-              source={element.source.name}
-              username={username}
-              saved={saved}
-            />
-          ))}
-        </NewsItemWrapper>
-        <NewsItemWrapper>
-          <NewsHeading>BBC News</NewsHeading>
-          {BBCArticles.map((element) => (
-            <NewsItem
-              key={element.url}
-              title={element.title ? element.title.slice(0, 45) : ""}
-              description={element.description}
-              imageUrl={element.urlToImage}
-              newsUrl={element.url}
-              author={element.author}
-              date={element.publishedAt}
-              source={element.source.name}
-              username={username}
-              saved={saved}
-            />
-          ))}
-        </NewsItemWrapper>
+        {gizmodoArticles.length > 0 && (
+          <NewsItemWrapper>
+            <NewsHeading>Gizmodo</NewsHeading>
+            {gizmodoArticles.map((element) => (
+              <NewsItem
+                key={element.url}
+                title={element.title ? element.title.slice(0, 45) : ""}
+                description={element.description}
+                imageUrl={element.urlToImage}
+                newsUrl={element.url}
+                author={element.author}
+                date={element.publishedAt}
+                source={element.source.name}
+                username={username}
+                saved={saved}
+              />
+            ))}
+          </NewsItemWrapper>
+        )}
+        {vergeArticles.length > 0 && (
+          <NewsItemWrapper>
+            <NewsHeading>The Verge</NewsHeading>
+            {vergeArticles.map((element) => (
+              <NewsItem
+                key={element.url}
+                title={element.title ? element.title.slice(0, 45) : ""}
+                description={element.description}
+                imageUrl={element.urlToImage}
+                newsUrl={element.url}
+                author={element.author}
+                date={element.publishedAt}
+                source={element.source.name}
+                username={username}
+                saved={saved}
+              />
+            ))}
+          </NewsItemWrapper>
+        )}
+        {BBCArticles.length > 0 && (
+          <NewsItemWrapper>
+            <NewsHeading>BBC News</NewsHeading>
+            {BBCArticles.map((element) => (
+              <NewsItem
+                key={element.url}
+                title={element.title ? element.title.slice(0, 45) : ""}
+                description={element.description}
+                imageUrl={element.urlToImage}
+                newsUrl={element.url}
+                author={element.author}
+                date={element.publishedAt}
+                source={element.source.name}
+                username={username}
+                saved={saved}
+              />
+            ))}
+          </NewsItemWrapper>
+        )}
       </NewsBlockContainer>
     </>
   );
