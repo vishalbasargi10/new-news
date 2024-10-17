@@ -24,7 +24,6 @@ const NewsItemWrapper = styled.div`
   max-width: 400px;
   margin: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
- 
   overflow: hidden;
   background-color: #fff;
   padding: 15px;
@@ -69,9 +68,9 @@ const NewsHeading = styled.h2`
 `;
 
 const News = (props) => {
-  const {saved}=props;
+  const { saved } = props;
 
-  const username=localStorage.getItem('loggedInUser');
+  const username = localStorage.getItem('loggedInUser');
   const { category } = props;
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -79,25 +78,46 @@ const News = (props) => {
   const updateNews = useCallback(async () => {
     setLoading(true);
     const url = `https://newsapi.org/v2/everything?q=${category}&apiKey=46355f02d04e4f778822e4e7829d1b66`;
-    let data = await fetch(url);
-    let parsedData = await data.json();
-    setArticles(parsedData.articles);
-    setLoading(false);
+    
+    try {
+      let data = await fetch(url);
+      
+      // Check if response is ok
+      if (!data.ok) {
+        console.error("HTTP error:", data.status, data.statusText);
+        setLoading(false);
+        return;
+      }
+
+      let parsedData = await data.json();
+      console.log("Fetched articles:", parsedData.articles);
+      
+      if (parsedData.articles) {
+        setArticles(parsedData.articles);
+      } else {
+        console.error("No articles found:", parsedData);
+        setArticles([]);
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+    } finally {
+      setLoading(false);
+    }
   }, [category]);
 
   useEffect(() => {
     updateNews();
   }, [category, updateNews]);
 
-  const gizmodoArticles = articles.filter(
+  const gizmodoArticles = articles?.filter(
     (article) => article.source.name === "Gizmodo.com"
-  );
-  const vergeArticles = articles.filter(
+  ) || [];
+  const vergeArticles = articles?.filter(
     (article) => article.source.name === "The Verge"
-  );
-  const BBCArticles = articles.filter(
+  ) || [];
+  const BBCArticles = articles?.filter(
     (article) => article.source.name === "BBC News"
-  );
+  ) || [];
 
   return (
     <>
@@ -118,8 +138,6 @@ const News = (props) => {
               source={element.source.name}
               username={username}
               saved={saved}
-
-              
             />
           ))}
         </NewsItemWrapper>
