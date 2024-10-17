@@ -77,20 +77,21 @@ const News = (props) => {
 
   const updateNews = useCallback(async () => {
     setLoading(true);
-    const url = `https://newsapi.org/v2/everything?q=${category}&apiKey=46355f02d04e4f778822e4e7829d1b66`;
+    const url = `https://newsapi.org/v2/everything?q=${category}&apiKey=${process.env.REACT_APP_API_KEY}`;
 
     try {
       let response = await fetch(url);
-
+      
       // Check if response is ok
       if (!response.ok) {
         console.error("HTTP error:", response.status, response.statusText);
+        setLoading(false);
         return;
       }
 
       let parsedData = await response.json();
       console.log("Fetched articles:", parsedData.articles);
-
+      
       if (parsedData.articles) {
         setArticles(parsedData.articles);
       } else {
@@ -121,66 +122,59 @@ const News = (props) => {
   return (
     <>
       {loading && <Spinner />}
-      {articles.length === 0 && !loading && <div>No articles found.</div>}
 
       <NewsBlockContainer>
-        {gizmodoArticles.length > 0 && (
-          <NewsItemWrapper>
-            <NewsHeading>Gizmodo</NewsHeading>
-            {gizmodoArticles.map((element) => (
-              <NewsItem
-                key={element.url}
-                title={element.title ? element.title.slice(0, 45) : ""}
-                description={element.description}
-                imageUrl={element.urlToImage}
-                newsUrl={element.url}
-                author={element.author}
-                date={element.publishedAt}
-                source={element.source.name}
-                username={username}
-                saved={saved}
-              />
-            ))}
-          </NewsItemWrapper>
-        )}
-        {vergeArticles.length > 0 && (
-          <NewsItemWrapper>
-            <NewsHeading>The Verge</NewsHeading>
-            {vergeArticles.map((element) => (
-              <NewsItem
-                key={element.url}
-                title={element.title ? element.title.slice(0, 45) : ""}
-                description={element.description}
-                imageUrl={element.urlToImage}
-                newsUrl={element.url}
-                author={element.author}
-                date={element.publishedAt}
-                source={element.source.name}
-                username={username}
-                saved={saved}
-              />
-            ))}
-          </NewsItemWrapper>
-        )}
-        {BBCArticles.length > 0 && (
-          <NewsItemWrapper>
-            <NewsHeading>BBC News</NewsHeading>
-            {BBCArticles.map((element) => (
-              <NewsItem
-                key={element.url}
-                title={element.title ? element.title.slice(0, 45) : ""}
-                description={element.description}
-                imageUrl={element.urlToImage}
-                newsUrl={element.url}
-                author={element.author}
-                date={element.publishedAt}
-                source={element.source.name}
-                username={username}
-                saved={saved}
-              />
-            ))}
-          </NewsItemWrapper>
-        )}
+        <NewsItemWrapper>
+          <NewsHeading>Gizmodo</NewsHeading>
+          {gizmodoArticles.map((element) => (
+            <NewsItem
+              key={element.url}
+              title={element.title ? element.title.slice(0, 45) : ""}
+              description={element.description}
+              imageUrl={element.urlToImage}
+              newsUrl={element.url}
+              author={element.author}
+              date={element.publishedAt}
+              source={element.source.name}
+              username={username}
+              saved={saved}
+            />
+          ))}
+        </NewsItemWrapper>
+        <NewsItemWrapper>
+          <NewsHeading>The Verge</NewsHeading>
+          {vergeArticles.map((element) => (
+            <NewsItem
+              key={element.url}
+              title={element.title ? element.title.slice(0, 45) : ""}
+              description={element.description}
+              imageUrl={element.urlToImage}
+              newsUrl={element.url}
+              author={element.author}
+              date={element.publishedAt}
+              source={element.source.name}
+              username={username}
+              saved={saved}
+            />
+          ))}
+        </NewsItemWrapper>
+        <NewsItemWrapper>
+          <NewsHeading>BBC News</NewsHeading>
+          {BBCArticles.map((element) => (
+            <NewsItem
+              key={element.url}
+              title={element.title ? element.title.slice(0, 45) : ""}
+              description={element.description}
+              imageUrl={element.urlToImage}
+              newsUrl={element.url}
+              author={element.author}
+              date={element.publishedAt}
+              source={element.source.name}
+              username={username}
+              saved={saved}
+            />
+          ))}
+        </NewsItemWrapper>
       </NewsBlockContainer>
     </>
   );
