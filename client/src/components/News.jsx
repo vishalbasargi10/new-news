@@ -77,7 +77,7 @@ const News = (props) => {
 
   const updateNews = useCallback(async () => {
     setLoading(true);
-    const url = `https://newsapi.org/v2/everything?q=${category}&apiKey=${process.env.REACT_APP_API_KEY}`;
+    const url = `https://saurav.tech/NewsAPI/top-headlines/category/${category}/in.json`;
 
     try {
       let response = await fetch(url);
@@ -110,13 +110,13 @@ const News = (props) => {
   }, [category, updateNews]);
 
   const gizmodoArticles = articles.filter(
-    (article) => article.source.name === "Gizmodo.com"
+    (article) => article.source.name === "CNBCTV18"
   );
   const vergeArticles = articles.filter(
-    (article) => article.source.name === "The Verge"
+    (article) => article.source.name === "Moneycontrol"
   );
   const BBCArticles = articles.filter(
-    (article) => article.source.name === "BBC News"
+    (article) => article.source.name === "News18"
   );
 
   return (
@@ -125,7 +125,7 @@ const News = (props) => {
 
       <NewsBlockContainer>
         <NewsItemWrapper>
-          <NewsHeading>Gizmodo</NewsHeading>
+          <NewsHeading>CNBCTV18</NewsHeading>
           {gizmodoArticles.map((element) => (
             <NewsItem
               key={element.url}
@@ -142,7 +142,7 @@ const News = (props) => {
           ))}
         </NewsItemWrapper>
         <NewsItemWrapper>
-          <NewsHeading>The Verge</NewsHeading>
+          <NewsHeading>Moneycontrol</NewsHeading>
           {vergeArticles.map((element) => (
             <NewsItem
               key={element.url}
@@ -159,7 +159,7 @@ const News = (props) => {
           ))}
         </NewsItemWrapper>
         <NewsItemWrapper>
-          <NewsHeading>BBC News</NewsHeading>
+          <NewsHeading>News18</NewsHeading>
           {BBCArticles.map((element) => (
             <NewsItem
               key={element.url}
